@@ -8,8 +8,8 @@ import { AuthProvider } from "@/components/providers/AuthProvider";
 import { Toaster } from "react-hot-toast";
 
 const manrope = Manrope({
-  variable: "--font-sans",
   subsets: ["latin"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -17,18 +17,14 @@ export const metadata: Metadata = {
   description: "HR Management Dashboard",
 };
 
-const RootLayout = ({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
-}>) => {
+}>) {
   return (
-    <html
-      lang="en"
-      className={`${manrope.variable} h-full antialiased`}
-      suppressHydrationWarning
-    >
-      <body className="min-h-full flex flex-col">
+    <html lang="en" suppressHydrationWarning>
+      <body className={`${manrope.className} min-h-screen bg-background text-foreground antialiased`}>
         <ReduxProvider>
           <AuthProvider>
             <QueryProvider>

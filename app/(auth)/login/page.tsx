@@ -6,7 +6,7 @@ import { signInWithGoogle } from "@/lib/firebase/auth";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 
-const LoginPage = () => {
+export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
@@ -52,4 +52,3 @@ const LoginPage = () => {
     </div>
   );
 }
-export default LoginPage;

@@ -21,7 +21,7 @@ const KPICard = ({ title, value, delta, icon }: { title: string, value: string, 
   );
 };
 
-const DashboardOverview = () => {
+export default function DashboardOverview() {
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div>
@@ -67,6 +67,4 @@ const DashboardOverview = () => {
       </div>
     </div>
   );
-};
-
-export default DashboardOverview;
+}

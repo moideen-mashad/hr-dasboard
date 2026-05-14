@@ -1,63 +1,77 @@
-import { useQuery } from '@tanstack/react-query';
-import { getDocs, query, collection, doc, getDoc, orderBy } from 'firebase/firestore';
+"use client";
+
+import { useState, useEffect } from 'react';
+import { query, collection, orderBy, onSnapshot, doc } from 'firebase/firestore';
 import { db } from '@/lib/firebase/config';
 import { getCache, setCache } from '@/lib/cache/localCache';
 
 export const usePerformanceStats = () => {
-  return useQuery({
-    queryKey: ['performanceStats'],
-    queryFn: async () => {
-      const docRef = doc(db, 'metrics', 'performance');
-      const snapshot = await getDoc(docRef);
+  const [data, setData] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const docRef = doc(db, 'metrics', 'performance');
+    const unsubscribe = onSnapshot(docRef, (snapshot) => {
       if (snapshot.exists()) {
-        return snapshot.data();
+        setData(snapshot.data());
       }
-      return null;
-    }
-  });
+      setIsLoading(false);
+    });
+    return () => unsubscribe(); // Cleanup to prevent memory leak
+  }, []);
+
+  return { data, isLoading };
 }
 
 export const usePerformanceTrend = () => {
-  return useQuery({
-    queryKey: ['performanceTrend'],
-    queryFn: async () => {
-      const cached = getCache<any[]>('performance-trend-cache');
-      
-      const q = query(collection(db, 'performanceTrend'), orderBy('order', 'asc'));
-      const snapshot = await getDocs(q);
-      const data = snapshot.docs.map(d => d.data());
-      
-      setCache('performance-trend-cache', data, 1000 * 60 * 30);
-      return data;
-    },
-    staleTime: 1000 * 60 * 10,
-  });
+  const [data, setData] = useState<any[]>(() => getCache<any[]>('performance-trend-cache') || []);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const q = query(collection(db, 'performanceTrend'), orderBy('order', 'asc'));
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const freshData = snapshot.docs.map(d => d.data());
+      setData(freshData);
+      setCache('performance-trend-cache', freshData, 1000 * 60 * 30);
+      setIsLoading(false);
+    });
+    return () => unsubscribe(); // Cleanup to prevent memory leak
+  }, []);
+
+  return { data, isLoading };
 }
 
 export const useOKRs = () => {
-  return useQuery({
-    queryKey: ['okrs'],
-    queryFn: async () => {
-      const q = query(collection(db, 'okrs'));
-      const snapshot = await getDocs(q);
-      return snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
-    }
-  });
+  const [data, setData] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const q = query(collection(db, 'okrs'));
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const freshData = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+      setData(freshData);
+      setIsLoading(false);
+    });
+    return () => unsubscribe(); // Cleanup to prevent memory leak
+  }, []);
+
+  return { data, isLoading };
 }
 
 export const useSkillsAnalysis = () => {
-  return useQuery({
-    queryKey: ['skillsAnalysis'],
-    queryFn: async () => {
-      const cached = getCache<any[]>('skills-analysis-cache');
-      
-      const q = query(collection(db, 'skillsAnalysis'));
-      const snapshot = await getDocs(q);
-      const data = snapshot.docs.map(d => d.data());
-      
-      setCache('skills-analysis-cache', data, 1000 * 60 * 60); // 1 hour TTL
-      return data;
-    },
-    staleTime: 1000 * 60 * 15,
-  });
+  const [data, setData] = useState<any[]>(() => getCache<any[]>('skills-analysis-cache') || []);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const q = query(collection(db, 'skillsAnalysis'));
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const freshData = snapshot.docs.map(d => d.data());
+      setData(freshData);
+      setCache('skills-analysis-cache', freshData, 1000 * 60 * 60);
+      setIsLoading(false);
+    });
+    return () => unsubscribe(); // Cleanup to prevent memory leak
+  }, []);
+
+  return { data, isLoading };
 }

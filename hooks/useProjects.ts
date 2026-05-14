@@ -1,26 +1,40 @@
-import { useQuery } from '@tanstack/react-query';
-import { getDocs, query, collection, orderBy } from 'firebase/firestore';
+"use client";
+
+import { useState, useEffect } from 'react';
+import { query, collection, orderBy, onSnapshot } from 'firebase/firestore';
 import { db } from '@/lib/firebase/config';
 import { Project } from '@/types/project';
 import { getCache, setCache } from '@/lib/cache/localCache';
 
 export const useProjects = () => {
-  return useQuery({
-    queryKey: ['projects'],
-    queryFn: async () => {
-      const cached = getCache<Project[]>('projects-cache');
-      
-      const q = query(collection(db, 'projects'), orderBy('name', 'asc'));
-      const snapshot = await getDocs(q);
-      
-      const freshData = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      })) as Project[];
+  const [data, setData] = useState<Project[]>(() => getCache<Project[]>('projects-cache') || []);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
 
-      setCache('projects-cache', freshData, 1000 * 60 * 15); // 15 min TTL
-      return freshData;
-    },
-    staleTime: 1000 * 60 * 5,
-  });
-}
+  useEffect(() => {
+    const q = query(collection(db, 'projects'), orderBy('name', 'asc'));
+    
+    // Real-time stream (WebSocket equivalent)
+    const unsubscribe = onSnapshot(q, 
+      (snapshot) => {
+        const projects = snapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        })) as Project[];
+        
+        setData(projects);
+        setCache('projects-cache', projects, 1000 * 60 * 15);
+        setIsLoading(false);
+      },
+      (err) => {
+        console.error("Projects stream error:", err);
+        setError(err as Error);
+        setIsLoading(false);
+      }
+    );
+
+    return () => unsubscribe();
+  }, []);
+
+  return { data, isLoading, error };
+};

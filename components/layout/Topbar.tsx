@@ -1,11 +1,18 @@
 "use client";
 
-import { Bell, Search, User, LogOut } from "lucide-react";
+import { Bell, Search, User, LogOut, Menu } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle";
 import { useAppSelector } from "@/hooks/redux";
 import { signOutUser } from "@/lib/firebase/auth";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import { Sidebar } from "./Sidebar";
+import {
+  Sheet,
+  SheetContent,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import { Button } from "@/components/ui/button";
 
 export const Topbar = () => {
   const user = useAppSelector(state => state.auth.user);
@@ -22,7 +29,20 @@ export const Topbar = () => {
   };
 
   return (
-    <header className="flex h-16 items-center gap-4 border-b border-border bg-card px-6">
+    <header className="flex h-16 items-center gap-4 border-b border-border bg-card px-4 md:px-6 sticky top-0 z-30">
+      <div className="lg:hidden">
+        <Sheet>
+          <SheetTrigger render={
+            <Button variant="ghost" size="icon" className="h-10 w-10">
+              <Menu className="h-6 w-6" />
+            </Button>
+          } />
+          <SheetContent side="left" className="p-0 w-64 border-r border-border bg-card">
+            <Sidebar />
+          </SheetContent>
+        </Sheet>
+      </div>
+
       <div className="flex-1">
         <form className="relative w-full max-w-md" role="search">
           <label htmlFor="global-search" className="sr-only">Search</label>

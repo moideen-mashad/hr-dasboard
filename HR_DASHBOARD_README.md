@@ -9,6 +9,11 @@
 
 Full-stack HR Management Dashboard with real-time data, role-based access, dark/light mode, and aggressive performance optimization. Built for scale.
 
+### 📖 Documentation Links
+- **[Firebase Setup Guide](./FIREBASE_README.md)**: How to connect your Firebase account.
+- **[Data Management Guide](./FIREBASE_DATA_GUIDE.md)**: How to add data for every module (KPIs, Charts, Employees).
+- **[Excel Import/Export Guide](./EXCEL_IMPORT_GUIDE.md)**: Bulk data management via spreadsheets.
+
 **Stack:**
 - **Frontend:** Next.js 14 (App Router), TypeScript, Tailwind CSS
 - **Auth:** Firebase Authentication (Google, Email/Password, SSO)

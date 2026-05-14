@@ -32,9 +32,11 @@ The Employee Table has been upgraded with real-time filtering and multi-column s
 *   Click again to toggle between **Ascending** and **Descending** order.
 *   Visual indicators (arrows) show the current active sort column and direction.
 
-### Real-time Filtering:
+### Real-time Filtering & Pagination:
 *   **Search**: Type in the search box to filter by employee name.
 *   **Department Filter**: Use the dropdown to show employees only from a specific department.
+*   **Pagination**: Navigate through large datasets using the page numbers or Previous/Next buttons at the bottom.
+*   **Page Size**: Choose between **10**, **25**, or **50** results per page using the selector in the footer.
 
 ### Implementation Details:
 *   **State Management**: Filters and sort state are persisted in Redux (`store/filterSlice.ts`).

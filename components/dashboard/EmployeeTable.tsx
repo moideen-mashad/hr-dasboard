@@ -1,80 +1,56 @@
 "use client";
 
-import { useMemo } from "react";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
+import { useEmployeeTable } from "@/hooks/useEmployeeTable";
+import { 
+  Table, 
+  TableBody, 
+  TableCell, 
+  TableHead, 
+  TableHeader, 
+  TableRow 
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useEmployees } from "@/hooks/useEmployees";
-import { useAppSelector, useAppDispatch } from "@/hooks/redux";
-import { setSort } from "@/store/filterSlice";
-import { ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
+import { ArrowUpDown, ArrowUp, ArrowDown, ChevronLeft, ChevronRight } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
 
 export const EmployeeTable = () => {
-  const dispatch = useAppDispatch();
-  const { data: employees = [], isLoading, error } = useEmployees();
-  const { dept, search, sortKey, sortDir } = useAppSelector(s => s.filters);
-
-  const toggleSort = (key: string) => {
-    if (sortKey === key) {
-      dispatch(setSort({ key, dir: sortDir === 'asc' ? 'desc' : 'asc' }));
-    } else {
-      dispatch(setSort({ key, dir: 'asc' }));
-    }
-  };
+  const {
+    paginated,
+    totalPages,
+    totalResults,
+    startIndex,
+    endIndex,
+    isLoading,
+    page,
+    pageSize,
+    sortKey,
+    sortDir,
+    toggleSort,
+    setPage,
+    setPageSize,
+  } = useEmployeeTable();
 
   const SortIcon = ({ column }: { column: string }) => {
     if (sortKey !== column) return <ArrowUpDown className="ml-2 h-4 w-4 opacity-50" />;
     return sortDir === 'asc' ? <ArrowUp className="ml-2 h-4 w-4" /> : <ArrowDown className="ml-2 h-4 w-4" />;
   };
 
-  const filteredEmployees = useMemo(() => {
-// ... existing memo logic
-    return employees
-      .filter(e => 
-        (dept === 'all' || e.dept === dept) &&
-        e.name.toLowerCase().includes(search.toLowerCase())
-      )
-      .sort((a, b) => {
-        const aVal = a[sortKey as keyof typeof a];
-        const bVal = b[sortKey as keyof typeof b];
-        
-        if (aVal === undefined || bVal === undefined) return 0;
-        
-        if (sortDir === 'asc') return aVal > bVal ? 1 : -1;
-        return aVal < bVal ? 1 : -1;
-      });
-  }, [employees, dept, search, sortKey, sortDir]);
-
   if (isLoading) {
     return (
       <div className="w-full space-y-4">
-        <div className="rounded-md border border-border">
+        <div className="rounded-xl border border-border overflow-hidden">
           <Table>
-            <TableHeader className="bg-muted/50">
-              <TableRow>
-                <TableHead>Name</TableHead>
-                <TableHead>Department</TableHead>
-                <TableHead>Role</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead className="text-right">Join Date</TableHead>
-              </TableRow>
-            </TableHeader>
+            <TableHeader className="bg-muted/50"><TableRow><TableHead colSpan={5}><Skeleton className="h-10 w-full" /></TableHead></TableRow></TableHeader>
             <TableBody>
               {[1, 2, 3, 4, 5].map((i) => (
-                <TableRow key={i}>
-                  <TableCell><Skeleton className="h-10 w-[150px]" /></TableCell>
-                  <TableCell><Skeleton className="h-6 w-[100px]" /></TableCell>
-                  <TableCell><Skeleton className="h-6 w-[120px]" /></TableCell>
-                  <TableCell><Skeleton className="h-6 w-[80px]" /></TableCell>
-                  <TableCell className="text-right"><Skeleton className="h-6 w-[90px] ml-auto" /></TableCell>
-                </TableRow>
+                <TableRow key={i}><TableCell colSpan={5}><Skeleton className="h-12 w-full" /></TableCell></TableRow>
               ))}
             </TableBody>
           </Table>
@@ -83,65 +59,39 @@ export const EmployeeTable = () => {
     );
   }
 
-  if (error) {
-    return (
-      <div className="w-full p-6 text-center border border-destructive/20 bg-destructive/10 rounded-xl text-destructive">
-        <p className="font-medium">Failed to load employees from Firebase.</p>
-        <p className="text-sm opacity-80 mt-1">Please check your Firebase configuration and rules.</p>
-      </div>
-    );
-  }
-
   return (
-    <div className="w-full">
-      <div className="rounded-md border border-border overflow-hidden bg-card">
-        <Table>
+    <div className="w-full space-y-4">
+      <div className="rounded-xl border border-border overflow-x-auto bg-card shadow-sm">
+        <Table className="min-w-[800px] md:min-w-full">
           <TableHeader className="bg-muted/50">
             <TableRow>
-              <TableHead 
-                className="cursor-pointer hover:text-foreground transition-colors" 
-                onClick={() => toggleSort('name')}
-              >
+              <TableHead className="cursor-pointer hover:text-primary transition-colors" onClick={() => toggleSort('name')}>
                 <div className="flex items-center">Name <SortIcon column="name" /></div>
               </TableHead>
-              <TableHead 
-                className="cursor-pointer hover:text-foreground transition-colors" 
-                onClick={() => toggleSort('dept')}
-              >
+              <TableHead className="cursor-pointer hover:text-primary transition-colors" onClick={() => toggleSort('dept')}>
                 <div className="flex items-center">Department <SortIcon column="dept" /></div>
               </TableHead>
-              <TableHead 
-                className="cursor-pointer hover:text-foreground transition-colors" 
-                onClick={() => toggleSort('role')}
-              >
+              <TableHead className="cursor-pointer hover:text-primary transition-colors" onClick={() => toggleSort('role')}>
                 <div className="flex items-center">Role <SortIcon column="role" /></div>
               </TableHead>
-              <TableHead 
-                className="cursor-pointer hover:text-foreground transition-colors" 
-                onClick={() => toggleSort('status')}
-              >
+              <TableHead className="cursor-pointer hover:text-primary transition-colors" onClick={() => toggleSort('status')}>
                 <div className="flex items-center">Status <SortIcon column="status" /></div>
               </TableHead>
-              <TableHead 
-                className="text-right cursor-pointer hover:text-foreground transition-colors" 
-                onClick={() => toggleSort('joinDate')}
-              >
+              <TableHead className="text-right cursor-pointer hover:text-primary transition-colors" onClick={() => toggleSort('joinDate')}>
                 <div className="flex items-center justify-end">Join Date <SortIcon column="joinDate" /></div>
               </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filteredEmployees.length === 0 ? (
+            {paginated.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={5} className="h-32 text-center text-muted-foreground">
-                  {employees.length === 0 
-                    ? "No employees found in Firebase. Add some data to your 'employees' collection." 
-                    : "No employees match your search criteria."}
+                  No records match your criteria.
                 </TableCell>
               </TableRow>
             ) : (
-              filteredEmployees.map((employee) => (
-                <TableRow key={employee.id} className="hover:bg-muted/50">
+              paginated.map((employee) => (
+                <TableRow key={employee.id} className="hover:bg-muted/50 transition-colors">
                   <TableCell>
                     <div className="font-medium text-foreground">{employee.name}</div>
                     <div className="text-sm text-muted-foreground">{employee.email}</div>
@@ -149,13 +99,11 @@ export const EmployeeTable = () => {
                   <TableCell className="text-muted-foreground">{employee.dept}</TableCell>
                   <TableCell className="text-muted-foreground">{employee.role}</TableCell>
                   <TableCell>
-                    <Badge 
-                      variant={employee.status === 'active' ? 'default' : employee.status === 'on_leave' ? 'secondary' : 'destructive'}
-                    >
-                      {employee.status.replace('_', ' ').toUpperCase()}
+                    <Badge variant={employee.status === 'active' ? 'default' : 'secondary'} className="capitalize">
+                      {employee.status.replace('_', ' ')}
                     </Badge>
                   </TableCell>
-                  <TableCell className="text-right text-muted-foreground">
+                  <TableCell className="text-right text-muted-foreground text-sm">
                     {new Date(employee.joinDate).toLocaleDateString()}
                   </TableCell>
                 </TableRow>
@@ -164,6 +112,38 @@ export const EmployeeTable = () => {
           </TableBody>
         </Table>
       </div>
+
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-6 bg-card border border-border p-4 rounded-xl shadow-sm">
+        <div className="flex items-center gap-4 text-sm text-muted-foreground">
+          <div className="flex items-center gap-2">
+            <span>Rows:</span>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="sm" className="h-8 rounded-lg">{pageSize}</Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="rounded-xl min-w-[80px]">
+                {[10, 25, 50].map((size) => (
+                  <DropdownMenuItem key={size} onClick={() => setPageSize(size)}>{size}</DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+          <span className="hidden sm:inline border-l h-4 mx-2" />
+          <span>Showing {startIndex}-{endIndex} of {totalResults}</span>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <Button variant="outline" size="sm" onClick={() => setPage(page - 1)} disabled={page === 1} className="rounded-lg h-9 w-9 p-0">
+            <ChevronLeft className="h-4 w-4" />
+          </Button>
+          <div className="flex items-center gap-1 font-medium text-sm">
+            {page} <span className="text-muted-foreground mx-1">/</span> {totalPages || 1}
+          </div>
+          <Button variant="outline" size="sm" onClick={() => setPage(page + 1)} disabled={page === totalPages || totalPages === 0} className="rounded-lg h-9 w-9 p-0">
+            <ChevronRight className="h-4 w-4" />
+          </Button>
+        </div>
+      </div>
     </div>
   );
-}
+};

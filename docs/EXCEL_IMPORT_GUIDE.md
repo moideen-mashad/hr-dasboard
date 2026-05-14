@@ -16,10 +16,11 @@ You can now bulk-import employees using Excel (`.xlsx`, `.xls`) or CSV files.
 4.  Click the **Import Excel** button and select your file.
 5.  The system will process the file and upload the data to Firestore in batches.
 
-### Implementation Details:
-*   **Library**: Uses `xlsx` for parsing.
-*   **Firestore**: Uses `writeBatch` for efficient bulk writes.
-*   **Component**: Located at `components/dashboard/ExcelImport.tsx`.
+### Key Features:
+*   **Validation**: Uses Zod to ensure all imported rows meet data requirements.
+*   **Export**: Download actual, live records from Firestore into Excel.
+*   **Bulk Operations**: Uses `writeBatch` for atomic, high-performance writes.
+*   **Normalization**: Automatically cleans and formats data (e.g., lowercase status) during import.
 
 ---
 

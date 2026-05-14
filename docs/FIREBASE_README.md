@@ -100,11 +100,14 @@ await signOutUser();
 ### Firestore Collections
 Common collections are defined in `lib/firebase/collections.ts`. This ensures type safety when interacting with Firestore.
 
-```typescript
 import { employeesCollection } from '@/lib/firebase/collections';
-import { getDocs } from 'firebase/firestore';
+import { onSnapshot } from 'firebase/firestore';
 
-// Example: Fetching all employees
-const snapshot = await getDocs(employeesCollection);
-const employees = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-```
+// Example: Real-time listener for employees
+const unsubscribe = onSnapshot(employeesCollection, (snapshot) => {
+  const employees = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  console.log("Real-time data:", employees);
+});
+
+// Always unsubscribe when cleaning up
+// unsubscribe();

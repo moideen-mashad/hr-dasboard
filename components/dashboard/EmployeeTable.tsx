@@ -118,10 +118,12 @@ export const EmployeeTable = () => {
           <div className="flex items-center gap-2">
             <span>Rows:</span>
             <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm" className="h-8 rounded-lg">{pageSize}</Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="rounded-xl min-w-[80px]">
+              <DropdownMenuTrigger render={
+                <Button variant="outline" size="sm" className="h-8 rounded-lg border-border">
+                  {pageSize}
+                </Button>
+              } />
+              <DropdownMenuContent align="start" className="rounded-xl border-border min-w-[80px]">
                 {[10, 25, 50].map((size) => (
                   <DropdownMenuItem key={size} onClick={() => setPageSize(size)}>{size}</DropdownMenuItem>
                 ))}

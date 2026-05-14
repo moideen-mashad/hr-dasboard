@@ -98,5 +98,19 @@ If you want to reset your database with sample genuine data:
 2.  Update the arrays with your data.
 3.  Run the seed function (usually triggered via a hidden dev button or CLI).
 
-### C. Manual Entry (Firebase Console)
-You can always add data manually at [console.firebase.google.com](https://console.firebase.google.com). Just ensure your field names match the lowercase names listed above exactly.
+## 🛡️ Data Validation (Zod)
+The system now uses enterprise-grade validation via **Zod**. Every entry must follow these rules:
+
+| Field | Validation Rule |
+| :--- | :--- |
+| **Email** | Must be a valid email format. |
+| **Status** | Must be `active`, `on_leave`, or `terminated`. |
+| **Dates** | Must be in `YYYY-MM-DD` format. |
+| **Progress** | Must be a number between `0` and `100`. |
+
+---
+
+## ⚡ Real-Time Streaming
+You no longer need to refresh the page. The dashboard uses **Firestore onSnapshot** (WebSocket equivalent):
+*   **Instant Updates**: Changes in the database are pushed to all connected users in milliseconds.
+*   **Memory Safe**: All listeners are automatically cleaned up when navigating to prevent leaks.

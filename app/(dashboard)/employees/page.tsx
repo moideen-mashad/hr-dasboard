@@ -1,4 +1,5 @@
-import { Users } from "lucide-react";
+import { EmployeeTable } from "@/components/dashboard/EmployeeTable";
+import { AddEmployeeDialog } from "@/components/dashboard/AddEmployeeDialog";
 
 export default function EmployeesPage() {
   return (
@@ -10,17 +11,11 @@ export default function EmployeesPage() {
             Manage your workforce directory and details.
           </p>
         </div>
-        <button className="bg-primary text-primary-foreground px-4 py-2 rounded-md font-medium hover:bg-primary/90 transition-colors">
-          Add Employee
-        </button>
+        <AddEmployeeDialog />
       </div>
 
-      <div className="border border-border bg-card rounded-2xl shadow-sm min-h-[500px] flex flex-col items-center justify-center p-6">
-        <Users className="h-12 w-12 text-muted-foreground/50 mb-4" />
-        <h3 className="text-lg font-medium text-foreground">Employee Table</h3>
-        <p className="text-muted-foreground text-center mt-2 max-w-sm">
-          The employee directory table will be displayed here, supporting pagination, sorting, and filtering.
-        </p>
+      <div className="bg-card rounded-2xl shadow-sm p-6 border border-border">
+        <EmployeeTable />
       </div>
     </div>
   );

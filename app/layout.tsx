@@ -3,6 +3,8 @@ import { Manrope } from "next/font/google";
 import "./globals.css";
 import { ReduxProvider } from "@/components/providers/ReduxProvider";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
+import { QueryProvider } from "@/components/providers/QueryProvider";
+import { Toaster } from "react-hot-toast";
 
 const manrope = Manrope({
   variable: "--font-sans",
@@ -27,9 +29,12 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <ReduxProvider>
-          <ThemeProvider>
-            {children}
-          </ThemeProvider>
+          <QueryProvider>
+            <ThemeProvider>
+              {children}
+              <Toaster position="top-right" />
+            </ThemeProvider>
+          </QueryProvider>
         </ReduxProvider>
       </body>
     </html>

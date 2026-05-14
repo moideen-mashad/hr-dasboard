@@ -7,7 +7,7 @@ import { SkillsRadarChart } from "@/components/dashboard/SkillsRadarChart";
 import { usePerformanceStats } from "@/hooks/usePerformanceMetrics";
 import { Skeleton } from "@/components/ui/skeleton";
 
-export default function PerformancePage() {
+const PerformancePage = () => {
   const { data: stats, isLoading } = usePerformanceStats();
 
   if (!isLoading && !stats) {
@@ -108,4 +108,6 @@ export default function PerformancePage() {
       </div>
     </div>
   );
-}
+};
+
+export default PerformancePage;

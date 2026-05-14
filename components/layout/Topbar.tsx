@@ -7,7 +7,7 @@ import { signOutUser } from "@/lib/firebase/auth";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 
-export function Topbar() {
+export const Topbar = () => {
   const user = useAppSelector(state => state.auth.user);
   const router = useRouter();
 

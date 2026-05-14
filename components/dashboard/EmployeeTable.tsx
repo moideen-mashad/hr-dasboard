@@ -14,7 +14,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useEmployees } from "@/hooks/useEmployees";
 import { useAppSelector } from "@/hooks/redux";
 
-export function EmployeeTable() {
+export const EmployeeTable = () => {
   const { data: employees = [], isLoading, error } = useEmployees();
   const { dept, search, sortKey, sortDir } = useAppSelector(s => s.filters);
 

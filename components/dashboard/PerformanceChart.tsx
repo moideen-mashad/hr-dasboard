@@ -5,7 +5,7 @@ import { useAppSelector } from "@/hooks/redux";
 import { usePerformanceTrend } from "@/hooks/usePerformanceMetrics";
 import { Skeleton } from "@/components/ui/skeleton";
 
-export function PerformanceChart() {
+export const PerformanceChart = () => {
   const isDarkMode = useAppSelector(state => state.theme.value === "dark");
   const { data: dbData, isLoading } = usePerformanceTrend();
   

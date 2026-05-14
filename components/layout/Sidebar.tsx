@@ -21,7 +21,7 @@ const routes = [
   { href: "/settings", label: "Settings", icon: Settings },
 ];
 
-export function Sidebar() {
+export const Sidebar = () => {
   const pathname = usePathname();
 
   return (

@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from "@/hooks/redux";
 import { toggleTheme } from "@/store/themeSlice";
 import { useEffect, useState } from "react";
 
-export function ThemeToggle() {
+export const ThemeToggle = () => {
   const theme = useAppSelector((state) => state.theme.value);
   const dispatch = useAppDispatch();
   const [mounted, setMounted] = useState(false);

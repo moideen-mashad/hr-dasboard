@@ -5,7 +5,7 @@ import { useAppSelector } from "@/hooks/redux";
 import { useSkillsAnalysis } from "@/hooks/usePerformanceMetrics";
 import { Skeleton } from "@/components/ui/skeleton";
 
-export function SkillsRadarChart() {
+export const SkillsRadarChart = () => {
   const isDarkMode = useAppSelector(state => state.theme.value === "dark");
   const { data: dbData, isLoading } = useSkillsAnalysis();
 

@@ -1,7 +1,7 @@
 import { EmployeeTable } from "@/components/dashboard/EmployeeTable";
 import { AddEmployeeDialog } from "@/components/dashboard/AddEmployeeDialog";
 
-export default function EmployeesPage() {
+const EmployeesPage = () => {
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="flex items-center justify-between">
@@ -19,4 +19,6 @@ export default function EmployeesPage() {
       </div>
     </div>
   );
-}
+};
+
+export default EmployeesPage;

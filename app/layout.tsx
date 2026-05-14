@@ -17,11 +17,11 @@ export const metadata: Metadata = {
   description: "HR Management Dashboard",
 };
 
-export default function RootLayout({
+const RootLayout = ({
   children,
 }: Readonly<{
   children: React.ReactNode;
-}>) {
+}>) => {
   return (
     <html
       lang="en"

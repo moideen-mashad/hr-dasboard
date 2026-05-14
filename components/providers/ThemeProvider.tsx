@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useAppSelector } from "@/hooks/redux";
 
-export function ThemeProvider({ children }: { children: React.ReactNode }) {
+export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
   const theme = useAppSelector((state) => state.theme.value);
   const [mounted, setMounted] = useState(false);
 

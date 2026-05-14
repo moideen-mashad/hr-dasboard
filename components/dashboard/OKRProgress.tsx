@@ -4,7 +4,7 @@ import { Target, CheckCircle2, AlertCircle } from "lucide-react";
 import { useOKRs } from "@/hooks/usePerformanceMetrics";
 import { Skeleton } from "@/components/ui/skeleton";
 
-export function OKRProgress() {
+export const OKRProgress = () => {
   const { data: dbData, isLoading } = useOKRs();
 
   if (isLoading) {

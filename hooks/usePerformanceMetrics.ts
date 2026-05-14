@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { getDocs, query, collection, doc, getDoc, orderBy } from 'firebase/firestore';
 import { db } from '@/lib/firebase/config';
 
-export function usePerformanceStats() {
+export const usePerformanceStats = () => {
   return useQuery({
     queryKey: ['performanceStats'],
     queryFn: async () => {
@@ -16,7 +16,7 @@ export function usePerformanceStats() {
   });
 }
 
-export function usePerformanceTrend() {
+export const usePerformanceTrend = () => {
   return useQuery({
     queryKey: ['performanceTrend'],
     queryFn: async () => {
@@ -28,7 +28,7 @@ export function usePerformanceTrend() {
   });
 }
 
-export function useOKRs() {
+export const useOKRs = () => {
   return useQuery({
     queryKey: ['okrs'],
     queryFn: async () => {
@@ -39,7 +39,7 @@ export function useOKRs() {
   });
 }
 
-export function useSkillsAnalysis() {
+export const useSkillsAnalysis = () => {
   return useQuery({
     queryKey: ['skillsAnalysis'],
     queryFn: async () => {

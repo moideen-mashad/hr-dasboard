@@ -1,6 +1,27 @@
 import { Users, UserPlus, TrendingDown, CalendarClock } from "lucide-react";
 
-export default function DashboardOverview() {
+const KPICard = ({ title, value, delta, icon }: { title: string, value: string, delta?: number, icon: React.ReactNode }) => {
+  return (
+    <div className="rounded-2xl border border-border bg-card text-card-foreground shadow-sm p-6 transition-all hover:shadow-md hover:border-primary/20 group">
+      <div className="flex flex-row items-center justify-between space-y-0 pb-4">
+        <h3 className="tracking-tight text-sm font-medium text-muted-foreground group-hover:text-foreground transition-colors">{title}</h3>
+        <div className="p-2 bg-primary/5 rounded-full group-hover:bg-primary/10 transition-colors">
+          {icon}
+        </div>
+      </div>
+      <div>
+        <div className="text-3xl font-bold text-foreground">{value}</div>
+        {delta !== undefined && (
+          <p className={`text-xs font-medium ${delta >= 0 ? 'text-emerald-500' : 'text-red-500'} mt-2 flex items-center`}>
+            {delta >= 0 ? '↑' : '↓'} {Math.abs(delta)}% <span className="text-muted-foreground ml-1 font-normal">from last month</span>
+          </p>
+        )}
+      </div>
+    </div>
+  );
+};
+
+const DashboardOverview = () => {
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div>
@@ -46,25 +67,6 @@ export default function DashboardOverview() {
       </div>
     </div>
   );
-}
+};
 
-function KPICard({ title, value, delta, icon }: { title: string, value: string, delta?: number, icon: React.ReactNode }) {
-  return (
-    <div className="rounded-2xl border border-border bg-card text-card-foreground shadow-sm p-6 transition-all hover:shadow-md hover:border-primary/20 group">
-      <div className="flex flex-row items-center justify-between space-y-0 pb-4">
-        <h3 className="tracking-tight text-sm font-medium text-muted-foreground group-hover:text-foreground transition-colors">{title}</h3>
-        <div className="p-2 bg-primary/5 rounded-full group-hover:bg-primary/10 transition-colors">
-          {icon}
-        </div>
-      </div>
-      <div>
-        <div className="text-3xl font-bold text-foreground">{value}</div>
-        {delta !== undefined && (
-          <p className={`text-xs font-medium ${delta >= 0 ? 'text-emerald-500' : 'text-red-500'} mt-2 flex items-center`}>
-            {delta >= 0 ? '↑' : '↓'} {Math.abs(delta)}% <span className="text-muted-foreground ml-1 font-normal">from last month</span>
-          </p>
-        )}
-      </div>
-    </div>
-  );
-}
+export default DashboardOverview;

@@ -1,6 +1,6 @@
 import { Calendar } from "lucide-react";
 
-export default function AttendancePage() {
+const AttendancePage = () => {
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div>
@@ -19,4 +19,6 @@ export default function AttendancePage() {
       </div>
     </div>
   );
-}
+};
+
+export default AttendancePage;

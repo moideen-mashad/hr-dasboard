@@ -1,6 +1,6 @@
 import { DollarSign } from "lucide-react";
 
-export default function PayrollPage() {
+const PayrollPage = () => {
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div>
@@ -19,4 +19,6 @@ export default function PayrollPage() {
       </div>
     </div>
   );
-}
+};
+
+export default PayrollPage;

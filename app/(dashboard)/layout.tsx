@@ -1,11 +1,11 @@
 import { Sidebar } from "@/components/layout/Sidebar";
 import { Topbar } from "@/components/layout/Topbar";
 
-export default function DashboardLayout({
+const DashboardLayout = ({
   children,
 }: {
   children: React.ReactNode;
-}) {
+}) => {
   return (
     <div className="min-h-screen bg-background">
       <Sidebar />
@@ -17,4 +17,6 @@ export default function DashboardLayout({
       </div>
     </div>
   );
-}
+};
+
+export default DashboardLayout;

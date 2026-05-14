@@ -3,7 +3,7 @@ import { getDocs, query, orderBy, collection } from 'firebase/firestore';
 import { db } from '@/lib/firebase/config';
 import { Employee } from '@/types/employee';
 
-export function useEmployees() {
+export const useEmployees = () => {
   return useQuery({
     queryKey: ['employees'],
     queryFn: async () => {

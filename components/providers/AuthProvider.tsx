@@ -6,7 +6,7 @@ import { auth } from "@/lib/firebase/config";
 import { useAppDispatch } from "@/hooks/redux";
 import { setUser, clearUser } from "@/store/authSlice";
 
-export function AuthProvider({ children }: { children: React.ReactNode }) {
+export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {

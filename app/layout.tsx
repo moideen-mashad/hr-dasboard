@@ -4,6 +4,7 @@ import "./globals.css";
 import { ReduxProvider } from "@/components/providers/ReduxProvider";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import { QueryProvider } from "@/components/providers/QueryProvider";
+import { AuthProvider } from "@/components/providers/AuthProvider";
 import { Toaster } from "react-hot-toast";
 
 const manrope = Manrope({
@@ -29,12 +30,14 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <ReduxProvider>
-          <QueryProvider>
-            <ThemeProvider>
-              {children}
-              <Toaster position="top-right" />
-            </ThemeProvider>
-          </QueryProvider>
+          <AuthProvider>
+            <QueryProvider>
+              <ThemeProvider>
+                {children}
+                <Toaster position="top-right" />
+              </ThemeProvider>
+            </QueryProvider>
+          </AuthProvider>
         </ReduxProvider>
       </body>
     </html>

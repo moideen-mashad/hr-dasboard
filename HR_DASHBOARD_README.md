@@ -158,6 +158,9 @@ hr-dashboard/
 
 ## ⚙️ Firebase Setup
 
+> [!TIP]
+> For a more detailed step-by-step guide on connecting Firebase, see [FIREBASE_README.md](./FIREBASE_README.md).
+
 ### 1. Create Firebase Project
 ```
 1. Go to https://console.firebase.google.com

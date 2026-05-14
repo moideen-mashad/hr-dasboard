@@ -38,12 +38,48 @@ NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
 1.  In the Firebase Console, go to **Build > Firestore Database**.
 2.  Click **Create database**.
 3.  Select a location and click **Next**.
-4.  Start in **Test mode** for initial development (remember to update rules for production).
+4.  Start in **Test mode** for initial development.
 5.  Click **Enable**.
 
-## How to use in the project
+## 5. Firestore Data Schema & Bulk Upload
 
-The Firebase setup is located in `lib/firebase/`.
+> [!TIP]
+> For instructions on how to add data manually via the console or perform bulk uploads (seeding), see **[DATA_MANAGEMENT.md](./DATA_MANAGEMENT.md)**.
+
+To see the dashboard charts populated, manually add these collections and documents in the Firebase Console:
+
+### `projects` (Collection)
+| Field | Type | Example |
+| :--- | :--- | :--- |
+| `name` | string | "Cloud Migration" |
+| `progress` | number | 75 |
+| `status` | string | "In Progress", "Completed", "On Hold", "Delayed" |
+| `department`| string | "IT" |
+
+### `performanceTrend` (Collection)
+| Field | Type | Example |
+| :--- | :--- | :--- |
+| `name` | string | "Jan", "Feb", etc. |
+| `performance`| number | 85 |
+| `order` | number | 1, 2, 3 (to keep months in order) |
+
+### `okrs` (Collection)
+| Field | Type | Example |
+| :--- | :--- | :--- |
+| `title` | string | "Increase Revenue" |
+| `progress` | number | 60 |
+| `status` | string | "on_track", "at_risk", "completed" |
+
+### `skillsAnalysis` (Collection)
+| Field | Type | Example |
+| :--- | :--- | :--- |
+| `subject` | string | "React", "Node.js", etc. |
+| `A` | number | 120 (Top Performers) |
+| `B` | number | 80 (Company Avg) |
+
+---
+
+## How to use in the project
 
 ### Configuration
 `lib/firebase/config.ts` initializes the Firebase app and exports the `auth` and `db` (Firestore) instances.

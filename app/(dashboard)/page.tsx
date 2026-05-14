@@ -1,6 +1,45 @@
-import { Users, UserPlus, TrendingDown, CalendarClock } from "lucide-react";
+"use client";
 
-const KPICard = ({ title, value, delta, icon }: { title: string, value: string, delta?: number, icon: React.ReactNode }) => {
+import { Users, UserPlus, TrendingDown, CalendarClock, Target, BarChart3, PieChart } from "lucide-react";
+import dynamic from "next/dynamic";
+import { useDashboardMetrics } from "@/hooks/useDashboardMetrics";
+import { Skeleton } from "@/components/ui/skeleton";
+
+// Code Splitting - Dynamic Imports for Heavy Components
+const PerformanceChart = dynamic(() => import("@/components/dashboard/PerformanceChart").then(mod => mod.PerformanceChart), {
+  ssr: false,
+  loading: () => <Skeleton className="h-[300px] w-full" />
+});
+
+const ProjectsChart = dynamic(() => import("@/components/dashboard/ProjectsChart").then(mod => mod.ProjectsChart), {
+  ssr: false,
+  loading: () => <Skeleton className="h-[350px] w-full" />
+});
+
+const SkillsRadarChart = dynamic(() => import("@/components/dashboard/SkillsRadarChart").then(mod => mod.SkillsRadarChart), {
+  ssr: false,
+  loading: () => <Skeleton className="h-[300px] w-full rounded-full" />
+});
+
+const OKRProgress = dynamic(() => import("@/components/dashboard/OKRProgress").then(mod => mod.OKRProgress), {
+  ssr: false,
+  loading: () => <div className="space-y-4"><Skeleton className="h-10 w-full" /><Skeleton className="h-10 w-full" /></div>
+});
+
+const KPICard = ({ title, value, delta, icon, isLoading }: { title: string, value: string | number, delta?: number, icon: React.ReactNode, isLoading?: boolean }) => {
+  if (isLoading) {
+    return (
+      <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
+        <div className="flex flex-row items-center justify-between pb-4">
+          <Skeleton className="h-4 w-24" />
+          <Skeleton className="h-9 w-9 rounded-full" />
+        </div>
+        <Skeleton className="h-8 w-20" />
+        <Skeleton className="h-4 w-32 mt-4" />
+      </div>
+    );
+  }
+
   return (
     <div className="rounded-2xl border border-border bg-card text-card-foreground shadow-sm p-6 transition-all hover:shadow-md hover:border-primary/20 group">
       <div className="flex flex-row items-center justify-between space-y-0 pb-4">
@@ -22,47 +61,104 @@ const KPICard = ({ title, value, delta, icon }: { title: string, value: string, 
 };
 
 export default function DashboardOverview() {
+  const { data: metrics, isLoading } = useDashboardMetrics();
+
   return (
-    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 pb-10">
       <div>
-        <h2 className="text-3xl font-bold tracking-tight text-foreground">Overview</h2>
+        <h2 className="text-3xl font-bold tracking-tight text-foreground">Analytics Dashboard</h2>
         <p className="text-muted-foreground mt-2">
-          Here's what's happening with your organization today.
+          Real-time metrics and project tracking from your organization.
         </p>
       </div>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
         <KPICard 
           title="Total Headcount" 
-          value="1,248" 
-          delta={2.4} 
+          value={metrics?.totalHeadcount?.toLocaleString() || "0"} 
+          delta={metrics?.totalHeadcountDelta} 
+          isLoading={isLoading}
           icon={<Users className="h-5 w-5 text-primary" />} 
         />
         <KPICard 
           title="New Hires (Month)" 
-          value="24" 
-          delta={12} 
+          value={metrics?.newHires || "0"} 
+          delta={metrics?.newHiresDelta} 
+          isLoading={isLoading}
           icon={<UserPlus className="h-5 w-5 text-primary" />} 
         />
         <KPICard 
           title="Attrition Rate" 
-          value="4.2%" 
-          delta={-0.8} 
+          value={`${metrics?.attritionRate || "0"}%`} 
+          delta={metrics?.attritionRateDelta} 
+          isLoading={isLoading}
           icon={<TrendingDown className="h-5 w-5 text-primary" />} 
         />
         <KPICard 
           title="On Leave Today" 
-          value="32" 
+          value={metrics?.onLeaveToday || "0"} 
+          isLoading={isLoading}
           icon={<CalendarClock className="h-5 w-5 text-primary" />} 
         />
       </div>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-7">
-        <div className="col-span-4 border border-border bg-card rounded-2xl shadow-sm p-6 min-h-[400px] flex flex-col items-center justify-center transition-all hover:shadow-md">
-          <p className="text-muted-foreground font-medium">Department Breakdown Chart (Coming Soon)</p>
+        {/* Performance Trend */}
+        <div className="col-span-4 border border-border bg-card rounded-2xl shadow-sm p-6 transition-all hover:shadow-md">
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h3 className="font-bold text-lg flex items-center gap-2">
+                <Target className="h-5 w-5 text-primary" />
+                Performance Trend
+              </h3>
+              <p className="text-sm text-muted-foreground">Monthly organization-wide performance</p>
+            </div>
+          </div>
+          <PerformanceChart />
         </div>
-        <div className="col-span-3 border border-border bg-card rounded-2xl shadow-sm p-6 min-h-[400px] flex flex-col items-center justify-center transition-all hover:shadow-md">
-          <p className="text-muted-foreground font-medium">Recent Activity (Coming Soon)</p>
+
+        {/* OKR Progress */}
+        <div className="col-span-3 border border-border bg-card rounded-2xl shadow-sm p-6 transition-all hover:shadow-md">
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h3 className="font-bold text-lg flex items-center gap-2">
+                <BarChart3 className="h-5 w-5 text-primary" />
+                Key OKRs
+              </h3>
+              <p className="text-sm text-muted-foreground">Current quarter objectives</p>
+            </div>
+          </div>
+          <OKRProgress />
+        </div>
+      </div>
+
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-7">
+        {/* Project Tracking */}
+        <div className="col-span-4 border border-border bg-card rounded-2xl shadow-sm p-6 transition-all hover:shadow-md">
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h3 className="font-bold text-lg flex items-center gap-2">
+                <PieChart className="h-5 w-5 text-primary" />
+                Project Roadmap & Progress
+              </h3>
+              <p className="text-sm text-muted-foreground">Live tracking of active initiatives</p>
+            </div>
+          </div>
+          <ProjectsChart />
+        </div>
+
+        {/* Skills Radar */}
+        <div className="col-span-3 border border-border bg-card rounded-2xl shadow-sm p-6 transition-all hover:shadow-md">
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h3 className="font-bold text-lg flex items-center gap-2">
+                <Users className="h-5 w-5 text-primary" />
+                Skills Analysis
+              </h3>
+              <p className="text-sm text-muted-foreground">Talent distribution across domains</p>
+            </div>
+          </div>
+          <SkillsRadarChart />
         </div>
       </div>
     </div>

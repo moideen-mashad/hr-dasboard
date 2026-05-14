@@ -12,13 +12,30 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useEmployees } from "@/hooks/useEmployees";
-import { useAppSelector } from "@/hooks/redux";
+import { useAppSelector, useAppDispatch } from "@/hooks/redux";
+import { setSort } from "@/store/filterSlice";
+import { ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
 
 export const EmployeeTable = () => {
+  const dispatch = useAppDispatch();
   const { data: employees = [], isLoading, error } = useEmployees();
   const { dept, search, sortKey, sortDir } = useAppSelector(s => s.filters);
 
+  const toggleSort = (key: string) => {
+    if (sortKey === key) {
+      dispatch(setSort({ key, dir: sortDir === 'asc' ? 'desc' : 'asc' }));
+    } else {
+      dispatch(setSort({ key, dir: 'asc' }));
+    }
+  };
+
+  const SortIcon = ({ column }: { column: string }) => {
+    if (sortKey !== column) return <ArrowUpDown className="ml-2 h-4 w-4 opacity-50" />;
+    return sortDir === 'asc' ? <ArrowUp className="ml-2 h-4 w-4" /> : <ArrowDown className="ml-2 h-4 w-4" />;
+  };
+
   const filteredEmployees = useMemo(() => {
+// ... existing memo logic
     return employees
       .filter(e => 
         (dept === 'all' || e.dept === dept) &&
@@ -81,11 +98,36 @@ export const EmployeeTable = () => {
         <Table>
           <TableHeader className="bg-muted/50">
             <TableRow>
-              <TableHead>Name</TableHead>
-              <TableHead>Department</TableHead>
-              <TableHead>Role</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead className="text-right">Join Date</TableHead>
+              <TableHead 
+                className="cursor-pointer hover:text-foreground transition-colors" 
+                onClick={() => toggleSort('name')}
+              >
+                <div className="flex items-center">Name <SortIcon column="name" /></div>
+              </TableHead>
+              <TableHead 
+                className="cursor-pointer hover:text-foreground transition-colors" 
+                onClick={() => toggleSort('dept')}
+              >
+                <div className="flex items-center">Department <SortIcon column="dept" /></div>
+              </TableHead>
+              <TableHead 
+                className="cursor-pointer hover:text-foreground transition-colors" 
+                onClick={() => toggleSort('role')}
+              >
+                <div className="flex items-center">Role <SortIcon column="role" /></div>
+              </TableHead>
+              <TableHead 
+                className="cursor-pointer hover:text-foreground transition-colors" 
+                onClick={() => toggleSort('status')}
+              >
+                <div className="flex items-center">Status <SortIcon column="status" /></div>
+              </TableHead>
+              <TableHead 
+                className="text-right cursor-pointer hover:text-foreground transition-colors" 
+                onClick={() => toggleSort('joinDate')}
+              >
+                <div className="flex items-center justify-end">Join Date <SortIcon column="joinDate" /></div>
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>

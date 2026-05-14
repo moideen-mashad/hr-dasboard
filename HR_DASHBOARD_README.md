@@ -12,6 +12,7 @@ Full-stack HR Management Dashboard with real-time data, role-based access, dark/
 **Stack:**
 - **Frontend:** Next.js 14 (App Router), TypeScript, Tailwind CSS
 - **Auth:** Firebase Authentication (Google, Email/Password, SSO)
+- **Excel Support:** Bulk import/export with [Excel/CSV](./EXCEL_IMPORT_GUIDE.md)
 - **Database:** Firebase Firestore
 - **Real-time:** Firebase WebSocket (Firestore `onSnapshot`) + custom WS layer
 - **Cache:** In-memory (React Query) + Browser Cache API + localStorage TTL cache
